@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gohttp
@@ -8,6 +8,9 @@ spec:
   replicas: 2
   revisionHistoryLimit: 10
   minReadySeconds: 5
+  selector:
+    matchLabels:
+      app: gohttp
   strategy:
     type: RollingUpdate
     rollingUpdate:
