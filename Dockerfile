@@ -1,3 +1,3 @@
 FROM scratch
-COPY hello-go /
-CMD ["/hello-go"]
+COPY gohttp /
+CMD ["/gohttp"]
