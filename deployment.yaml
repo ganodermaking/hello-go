@@ -23,8 +23,28 @@ spec:
     spec:
       containers:
         - image: scratch/gohttp:v1
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent # Always：总是拉取远程镜像；IfNotPresent：本地有镜像, 不拉取远程镜像；Never：只使用本地镜像
           name: gohttp
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /ping
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 15
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /ping
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 15
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -35,31 +55,22 @@ spec:
             requests:
               cpu: 50m
               memory: 50Mi
-          livenessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 3
-          readinessProbe:
-            httpGet:
-              path: /ping
-              port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: gohttp
+  namespace: default
   labels:
     app: gohttp
 spec:
-  type: NodePort
+  type: NodePort # LoadBalancer ClusterIP NodePort
+  sessionAffinity: None
   selector:
     app: gohttp
   ports:
     - name: gohttp
-      port: 8080
+      port: 8080 # 暴露给集群内客户访问服务
       protocol: TCP
-      targetPort: 8080
-      nodePort: 32767
+      targetPort: 8080 # targetPort是pod上的端口
+      nodePort: 32767 # 暴露给集群外客户访问服务
