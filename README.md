@@ -34,4 +34,4 @@ kubectl create -f deployment.yaml
 
 <http://localhost:32767/ping>
 
-> 仅mac os系统测试通过
+> mac docker desktop 2.3.0.2自带kubernetes v1.16.5演示
