@@ -23,3 +23,7 @@ docker build -t scratch/gohttp:v1 .
 ```shell
 kubectl create -f deployment.yaml
 ```
+
+## 访问服务
+
+<http://localhost:32767/ping>
